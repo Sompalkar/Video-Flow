@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 dotenv.config()
 import {connectMongo} from './db/mongo.js'
+import { authMiddleware } from './middleware/authMiddleware.js'
 
 
 const app = express()
@@ -23,6 +24,7 @@ app.use(cors(
 
 connectMongo()
 app.use(cookieParser())
+ 
 app.use('/api/user', userRoutes)
 
 
