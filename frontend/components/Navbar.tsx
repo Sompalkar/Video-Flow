@@ -1,17 +1,21 @@
 
 "use client"
 
+import { useAuthStore } from "@/lib/store/auth";
 import React, { useState } from "react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
+    const  { user } = useAuthStore()
+   console.log('dashboard',user)
+
   return (
-    <nav className="w-full h-16 px-8 flex items-center justify-between bg-white/70 backdrop-blur-md border-b border-neutral-200">
+     <nav className="w-full h-16 px-8 flex items-center justify-between bg-white/70 backdrop-blur-md border-b border-neutral-200">
 
   
       <div className="text-lg font-semibold tracking-tight">
-        VideoFlow
+      {user?.name}
       </div>
 
       
@@ -26,7 +30,7 @@ const Navbar = () => {
       
       <div className="flex items-center gap-3">
         <button className="hidden md:block text-sm text-neutral-700 hover:text-black transition">
-          Profile
+          {user?.name}
         </button>
 
            
@@ -49,7 +53,7 @@ const Navbar = () => {
             <button className="text-left text-neutral-700 hover:text-black">Verified</button>
             <button className="text-left text-neutral-700 hover:text-black">Creator</button>
             <button className="text-left text-neutral-700 hover:text-black">Settings</button>
-            <button className="text-left text-neutral-700 hover:text-black">Profile</button>
+            <button className="text-left text-neutral-700 hover:text-black">{user?.name}</button>
           </div>
         </div>
       )}

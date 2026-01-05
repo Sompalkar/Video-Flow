@@ -1,13 +1,12 @@
 import Image from "next/image";
+import Dashboard from "./dashboard/page";
 
 export default function Home() {
   return (
-    <>
-    
-    < h1> Video Flow </h1>
-
+    <div  className="h-full w-full">
+     <Dashboard/>
     
     
-    </>
+    </div>
   );
 }

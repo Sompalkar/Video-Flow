@@ -103,3 +103,34 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 }
+
+export const getUserProfile = async (req: Request, res: Response) => {
+
+    console.log("reached here.... ")
+    console.log(req.user)
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
+
+        const { userId } = req.user
+
+        const user = await User.findById(userId)
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+
+        return res.status(200).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name
+            }
+        })
+
+    } catch (error) {
+        console.log('Get user profile error: ', error)
+        return res.status(500).json({ error: "Internal server error" })
+    }
+}
