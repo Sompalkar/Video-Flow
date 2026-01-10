@@ -61,14 +61,13 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
 
         const loginData = loginSchema.parse(req.body)
-
         const { email, password } = loginData
 
+        
         const user = await User.findOne({ email })
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
-
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password!)
