@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import {connectMongo} from './db/mongo.js'
 import { authMiddleware } from './middleware/authMiddleware.js'
+ import projectRoutes from './routes/project.routes.js'
 
 
 const app = express()
@@ -26,6 +27,7 @@ connectMongo()
 app.use(cookieParser())
  
 app.use('/api/user', userRoutes)
+app.use('/api/project', projectRoutes)
 
 
 
