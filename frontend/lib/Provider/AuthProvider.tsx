@@ -22,7 +22,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setUser(res.data.user)
 
             } catch (error) {
-                console.log("Persistant login failed", error)
+                // Silent fail for auth check
                 setUser(null)
             }
         }

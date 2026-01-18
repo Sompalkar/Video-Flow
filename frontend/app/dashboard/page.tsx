@@ -1,28 +1,27 @@
 'use client'
 
-import axios from 'axios' 
+import axios from 'axios'
 import React, { useState } from 'react'
 
 const DashboardPage = () => {
 
-  const [ title , setTitle]= useState('')
-  const [ description, setDescription] = useState('')
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [status, setStatus] = useState('')
 
 
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
 
       e.preventDefault()
-      const res = await axios.post('http://localhost:300/api/project/create', {
-        title:title,
-        description:description,
-        status:status
+      const res = await axios.post('http://localhost:8000/api/project/create', {
+        title: title,
+        description: description,
+        status: status
       })
-      console.log(res.data)
     } catch (error) {
-      console.log(error)
+      // TODO: Add proper error handling
 
     }
   }
@@ -32,13 +31,13 @@ const DashboardPage = () => {
 
         <form onSubmit={handleSubmit}>
           <label htmlFor='title'>Title</label>
-          <input onChange={(e)=> setTitle(e.target.value)} value={title} type='text' id='title' />
+          <input onChange={(e) => setTitle(e.target.value)} value={title} type='text' id='title' />
 
           <label htmlFor='description'>Description</label>
-          <input onChange={ (e)=> setDescription(e.target.value)} value={description} type='text' id='description' />
+          <input onChange={(e) => setDescription(e.target.value)} value={description} type='text' id='description' />
 
           <label htmlFor='status'>Status</label>
-          <input onChange={ (e)=> setStatus(e.target.value)} value={status} type='text' id='status' />
+          <input onChange={(e) => setStatus(e.target.value)} value={status} type='text' id='status' />
 
           <button type='submit'> Create</button>
 
