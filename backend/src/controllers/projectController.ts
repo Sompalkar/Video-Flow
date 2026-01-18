@@ -8,7 +8,7 @@ import Project from "../models/project.js";
 export const createProject = async (req: Request, res: Response) => {
     try {
 
-         const createProjectData = createProjectSchema.parse(req.body)
+        const createProjectData = createProjectSchema.parse(req.body)
         const { title, description, status } = createProjectData
 
         const creator= req.user?.userID
@@ -20,7 +20,7 @@ export const createProject = async (req: Request, res: Response) => {
             ...(description !== undefined && { description })
         })
 
-        if ( !project ){
+        if (!project ){
             return res.status(400).json({message:"Failed to create project"})
         }
 
@@ -48,14 +48,14 @@ export const getProjects = async (req: Request, res: Response) => {
         if (!project ){
             return res.status(404).json({message:"Project not found "})
         }
-        
+    
         return res.status(200).json({project})
     } catch (error:any) {
 
         if ( error.name === 'ZodError'){
             return res.status(400).json({error}) 
         }
-        
+    
         console.log("Project get error: ", error)
         return res.status(500).json({ error: "Internal server error" });
     }
@@ -66,9 +66,7 @@ export const getProjects = async (req: Request, res: Response) => {
 export const updateProject = async (req: Request, res: Response) => {
 
     try { 
-
         const updateProjectData = updateProjectSchema.parse(req.body)
-
         const { id, title, description, status} = updateProjectData
 
         const updatedProject= await Project.findByIdAndUpdate(id, {tittle:title, description:description, status:status})
@@ -99,11 +97,10 @@ export const deleteProject = async (req: Request, res: Response) => {
         if(!deletedProject){
             return res.status(404).json({message:"Project not found "})
         }
-
         return res.status(200).json({ message:"project deleted successfully", deletedProject})
         
     } catch (error:any) {
-        if(error.name == 'ZodError'){
+        if(error.name === 'ZodError'){
             return res.status(400).json({error: error.errors })
         }
         console.log(error)
