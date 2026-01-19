@@ -18,7 +18,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     withCredentials: true
                 })
 
-                // console.log('from',res.data.user)
+
                 setUser(res.data.user)
 
             } catch (error) {
@@ -27,6 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
 
+        // Fetch user data on mount
         getUser()
 
     }, [])

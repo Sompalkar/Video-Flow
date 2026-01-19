@@ -11,7 +11,10 @@ export const createProject = async (req: Request, res: Response) => {
         const createProjectData = createProjectSchema.parse(req.body)
         const { title, description, status } = createProjectData
 
-        const creator= req.user?.userID
+        if (!req.user) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const creator = req.user.userId;
 
         const project = await Project.create({
             title,
@@ -20,16 +23,16 @@ export const createProject = async (req: Request, res: Response) => {
             ...(description !== undefined && { description })
         })
 
-        if (!project ){
-            return res.status(400).json({message:"Failed to create project"})
+        if (!project) {
+            return res.status(400).json({ message: "Failed to create project" })
         }
 
-        return res.status(201).json({message:"Project created successfully", project})
-  
-    } catch (error:any) {
-        if ( error.name === 'ZodError'){
+        return res.status(201).json({ message: "Project created successfully", project })
+
+    } catch (error: any) {
+        if (error.name === 'ZodError') {
             return res.status(400).json({ error: error.errors });
-        } 
+        }
         console.log("Project create error: ", error)
         return res.status(500).json({ error: "Internal server error" });
     }
@@ -42,20 +45,23 @@ export const createProject = async (req: Request, res: Response) => {
 
 
 export const getProjects = async (req: Request, res: Response) => {
-    
-    try {
-        const project = await Project.find({creator:req.user?.userID})
-        if (!project ){
-            return res.status(404).json({message:"Project not found "})
-        }
-    
-        return res.status(200).json({project})
-    } catch (error:any) {
 
-        if ( error.name === 'ZodError'){
-            return res.status(400).json({error}) 
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
-    
+        const project = await Project.find({ creator: req.user.userId })
+        if (!project) {
+            return res.status(404).json({ message: "Project not found " })
+        }
+
+        return res.status(200).json({ project })
+    } catch (error: any) {
+
+        if (error.name === 'ZodError') {
+            return res.status(400).json({ error })
+        }
+
         console.log("Project get error: ", error)
         return res.status(500).json({ error: "Internal server error" });
     }
@@ -65,25 +71,25 @@ export const getProjects = async (req: Request, res: Response) => {
 
 export const updateProject = async (req: Request, res: Response) => {
 
-    try { 
+    try {
         const updateProjectData = updateProjectSchema.parse(req.body)
-        const { id, title, description, status} = updateProjectData
+        const { id, title, description, status } = updateProjectData
 
-        const updatedProject= await Project.findByIdAndUpdate(id, {tittle:title, description:description, status:status})
+        const updatedProject = await Project.findByIdAndUpdate(id, { title: title, description: description, status: status })
 
-        if (!updatedProject){
-            return res.status(404).json({message:"Project not found "})
-        } 
-        return res.status(200).json({ message:"project updated successfully", updatedProject})
+        if (!updatedProject) {
+            return res.status(404).json({ message: "Project not found " })
+        }
+        return res.status(200).json({ message: "project updated successfully", updatedProject })
 
-    } catch (error:any) {
+    } catch (error: any) {
 
-        if ( error.name === 'ZodError'){
+        if (error.name === 'ZodError') {
             return res.status(400).json({ error: error.errors });
-        }  
+        }
         console.log('Project update Error:   ', error)
-        return res.status(500).json({ message:'Failed to update project'}) 
-        
+        return res.status(500).json({ message: 'Failed to update project' })
+
     }
 
 }
@@ -91,21 +97,21 @@ export const updateProject = async (req: Request, res: Response) => {
 
 export const deleteProject = async (req: Request, res: Response) => {
     try {
-        const { id }= req.body
-        const deletedProject = await  Project.findByIdAndDelete(id)
+        const { id } = req.body
+        const deletedProject = await Project.findByIdAndDelete(id)
 
-        if(!deletedProject){
-            return res.status(404).json({message:"Project not found "})
+        if (!deletedProject) {
+            return res.status(404).json({ message: "Project not found " })
         }
-        return res.status(200).json({ message:"project deleted successfully", deletedProject})
-        
-    } catch (error:any) {
-        if(error.name === 'ZodError'){
-            return res.status(400).json({error: error.errors })
+        return res.status(200).json({ message: "project deleted successfully", deletedProject })
+
+    } catch (error: any) {
+        if (error.name === 'ZodError') {
+            return res.status(400).json({ error: error.errors })
         }
         console.log(error)
-        return res.status(500).json({ error:"Internal server error"})
-        
+        return res.status(500).json({ error: "Internal server error" })
+
     }
 }
 
