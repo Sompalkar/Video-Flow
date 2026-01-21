@@ -105,3 +105,8 @@ export const getUserProfile = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Internal server error" })
     }
 }
+
+export const logoutUser = async (req: Request, res: Response) => {
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Logged out successfully" });
+}
