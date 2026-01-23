@@ -3,51 +3,116 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 
-const DashboardPage = () => {
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+const DashboardPage = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [status, setStatus] = useState('')
-
-
+  const [status, setStatus] = useState('pending')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
     try {
+      setLoading(true)
 
-      e.preventDefault()
-      const res = await axios.post('http://localhost:8000/api/project/create', {
-        title: title,
-        description: description,
-        status: status
-      })
+      await axios.post('http://localhost:8000/api/project/create', {
+        title,
+        description,
+        status,
+      }, { withCredentials:true})
+
+      // clear form
+      setTitle('')
+      setDescription('')
+      setStatus('draft')
     } catch (error) {
-      // TODO: Add proper error handling
-
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
+
   return (
-    <div className='h-screen w-full flex flex-row justify-center   border-2 rounded-lg'>
-      <div className=' border-4 border-blue-500 w-full rounded-lg  p-4    '>
+    <div className="min-h-screen w-full flex items-center justify-center px-4">
+      <div className='flex flex-row justify-between items-center w-full gap-4'>
+        <div>
+          <h1>Dashboard</h1>
+        </div>
+        <div>
+          
+          <Card className="w-full max-w-xl rounded-2xl shadow-md">
+        <CardHeader>
+          <CardTitle className="text-xl">Create New Project</CardTitle>
+        </CardHeader>
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor='title'>Title</label>
-          <input onChange={(e) => setTitle(e.target.value)} value={title} type='text' id='title' />
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                type="text"
+                placeholder="Enter project title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
 
-          <label htmlFor='description'>Description</label>
-          <input onChange={(e) => setDescription(e.target.value)} value={description} type='text' id='description' />
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                placeholder="Write project description..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
 
-          <label htmlFor='status'>Status</label>
-          <input onChange={(e) => setStatus(e.target.value)} value={status} type='text' id='status' />
+            {/* Status Select */}
+            <div className="space-y-2">
+              <Label>Status</Label>
 
-          <button type='submit'> Create</button>
+              <Select value={status} onValueChange={(val) => setStatus(val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
 
-        </form>
+                <SelectContent>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="review">Review</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
+            {/* Submit */}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Project'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card></div>
       </div>
-
     </div>
   )
 }
-
 
 export default DashboardPage
