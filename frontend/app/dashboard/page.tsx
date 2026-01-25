@@ -23,6 +23,12 @@ const DashboardPage = () => {
   const [status, setStatus] = useState('pending')
   const [loading, setLoading] = useState(false)
 
+  const handleCancel = () => {
+    setTitle('')
+    setDescription('')
+    setStatus('draft')
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -33,7 +39,7 @@ const DashboardPage = () => {
         title,
         description,
         status,
-      }, { withCredentials:true})
+      }, { withCredentials: true })
 
       // clear form
       setTitle('')
@@ -53,63 +59,75 @@ const DashboardPage = () => {
           <h1>Dashboard</h1>
         </div>
         <div>
-          
+
           <Card className="w-full max-w-xl rounded-2xl shadow-md">
-        <CardHeader>
-          <CardTitle className="text-xl">Create New Project</CardTitle>
-        </CardHeader>
+            <CardHeader>
+              <CardTitle className="text-xl">Create New Project</CardTitle>
+            </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                type="text"
-                placeholder="Enter project title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    placeholder="Enter project title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Write project description..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="min-h-[100px]"
-              />
-            </div>
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Write project description..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                </div>
 
-            {/* Status Select */}
-            <div className="space-y-2">
-              <Label>Status</Label>
+                {/* Status Select */}
+                <div className="space-y-2">
+                  <Label>Status</Label>
 
-              <Select value={status} onValueChange={(val) => setStatus(val)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
+                  <Select value={status} onValueChange={(val) => setStatus(val)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
 
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="review">Review</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="review">Review</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Submit */}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Project'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card></div>
+                {/* Submit */}
+                {/* Submit & Cancel */}
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleCancel}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Creating...' : 'Create Project'}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card></div>
       </div>
     </div>
   )
