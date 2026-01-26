@@ -88,7 +88,11 @@ const DashboardPage = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="min-h-[100px]"
+                    maxLength={500}
                   />
+                  <p className="text-xs text-muted-foreground text-right">
+                    {description.length} / 500
+                  </p>
                 </div>
 
                 {/* Status Select */}
