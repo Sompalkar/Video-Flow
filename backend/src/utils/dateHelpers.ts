@@ -9,3 +9,9 @@ export const addDays = (date: Date, days: number): Date => {
     result.setDate(result.getDate() + days);
     return result;
 };
+
+export const getEndOfDay = (date: Date): Date => {
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59, 999);
+    return newDate;
+};
