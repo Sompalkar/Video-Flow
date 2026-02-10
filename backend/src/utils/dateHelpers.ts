@@ -23,3 +23,7 @@ export const isSameDay = (date1: Date, date2: Date): boolean => {
         date1.getDate() === date2.getDate()
     );
 };
+
+export const getDaysInMonth = (month: number, year: number): number => {
+    return new Date(year, month + 1, 0).getDate();
+};
