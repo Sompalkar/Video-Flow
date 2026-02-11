@@ -27,3 +27,7 @@ export const isSameDay = (date1: Date, date2: Date): boolean => {
 export const getDaysInMonth = (month: number, year: number): number => {
     return new Date(year, month + 1, 0).getDate();
 };
+
+export const isValidDate = (date: any): boolean => {
+    return date instanceof Date && !isNaN(date.getTime());
+};
