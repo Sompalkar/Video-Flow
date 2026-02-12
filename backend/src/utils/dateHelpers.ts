@@ -31,3 +31,9 @@ export const getDaysInMonth = (month: number, year: number): number => {
 export const isValidDate = (date: any): boolean => {
     return date instanceof Date && !isNaN(date.getTime());
 };
+
+export const subtractDays = (date: Date, days: number): Date => {
+    const result = new Date(date);
+    result.setDate(result.getDate() - days);
+    return result;
+};
