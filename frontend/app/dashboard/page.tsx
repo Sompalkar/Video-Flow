@@ -27,6 +27,19 @@ interface Project {
 const DashboardPage = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [title, setTitle] = useState('')
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'bg-green-100 text-green-700'
+      case 'in-progress':
+        return 'bg-blue-100 text-blue-700'
+      case 'review':
+        return 'bg-yellow-100 text-yellow-700'
+      default:
+        return 'bg-gray-100 text-gray-700'
+    }
+  }
   const [description, setDescription] = useState('')
   const [status, setStatus] = useState('pending')
   const [loading, setLoading] = useState(false)
@@ -91,7 +104,7 @@ const DashboardPage = () => {
                 <Card key={project._id} className="p-4">
                   <CardTitle className="text-lg">{project.title}</CardTitle>
                   <p className="text-sm text-muted-foreground mt-1 px-1">{project.description}</p>
-                  <div className="mt-2 text-xs font-semibold px-1 py-1 rounded-full bg-secondary w-fit">
+                  <div className={`mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit uppercase ${getStatusColor(project.status)}`}>
                     {project.status}
                   </div>
                 </Card>
