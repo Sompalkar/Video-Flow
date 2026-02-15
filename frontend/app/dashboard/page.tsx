@@ -1,7 +1,8 @@
 'use client'
 
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
+import { Trash2, Search } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -27,6 +28,7 @@ interface Project {
 const DashboardPage = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [title, setTitle] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -91,19 +93,55 @@ const DashboardPage = () => {
     }
   }
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return
+    try {
+      await axios.delete(`http://localhost:8000/api/project/deleteProject/${id}`, {
+        withCredentials: true
+      })
+      fetchProjects()
+    } catch (error) {
+      console.error('Error deleting project:', error)
+    }
+  }
+
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+  }, [projects, searchQuery])
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4">
       <div className='flex flex-row justify-between items-center w-full gap-4'>
         <div className="flex-1 space-y-4 max-w-2xl">
-          <h1 className="text-3xl font-bold">My Projects</h1>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search projects by title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
           <div className="grid gap-4">
-            {projects.length === 0 ? (
-              <p className="text-muted-foreground">No projects found. Create one to get started!</p>
+            {filteredProjects.length === 0 ? (
+              <p className="text-muted-foreground">No projects found.</p>
             ) : (
-              projects.map((project) => (
-                <Card key={project._id} className="p-4">
-                  <CardTitle className="text-lg">{project.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1 px-1">{project.description}</p>
+              filteredProjects.map((project) => (
+                <Card key={project._id} className="p-4 relative group">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">{project.title}</CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1 px-1">{project.description}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => handleDelete(project._id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <div className={`mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit uppercase ${getStatusColor(project.status)}`}>
                     {project.status}
                   </div>
