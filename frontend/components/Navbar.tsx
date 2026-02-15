@@ -1,64 +1,72 @@
-
-"use client"
-
-import { useAuthStore } from "@/lib/store/auth";
 import React, { useState } from "react";
 
-const Navbar = () => {
-  const [open, setOpen] = useState(false);
+export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const  { user } = useAuthStore()
-   console.log('dashboard',user)
+  const menuItems = ["Dashboard", "Video", "Youtube", "Profile"];
 
   return (
-     <nav className="w-full h-16 px-8 flex items-center justify-between bg-white/70 backdrop-blur-md border-b border-neutral-200">
-
+    <>
+      <div className="flex items-center justify-between w-full px-4 py-3 shadow-md">
+        
   
-      <div className="text-lg font-semibold tracking-tight">
-      {user?.name}
-      </div>
-
-      
-      <div className="hidden md:flex items-center gap-8 text-sm">
-        <button className="hover:text-black text-neutral-600 transition">Home</button>
-        <button className="hover:text-black text-neutral-600 transition">Trending</button>
-        <button className="hover:text-black text-neutral-600 transition">Verified</button>
-        <button className="hover:text-black text-neutral-600 transition">Creator</button>
-        <button className="hover:text-black text-neutral-600 transition">Settings</button>
-      </div>
-
-      
-      <div className="flex items-center gap-3">
-        <button className="hidden md:block text-sm text-neutral-700 hover:text-black transition">
-          {user?.name}
-        </button>
-
-           
         <button
-          className="md:hidden w-9 h-9 flex flex-col justify-center items-center rounded-lg border border-neutral-200"
-          onClick={() => setOpen(!open)}
+          className="md:hidden text-2xl"
+          onClick={() => setIsOpen(true)}
         >
-          <span className="w-5 h-[2px] bg-black mb-1 rounded"></span>
-          <span className="w-5 h-[2px] bg-black mb-1 rounded"></span>
-          <span className="w-5 h-[2px] bg-black rounded"></span>
+          ☰
         </button>
-      </div>
 
          
-      {open && (
-        <div className="absolute top-16 left-0 w-full bg-white/80  border-b  border-neutral-200 md:hidden">
-          <div className="flex flex-col p-4 gap-4 text-sm ">
-            <button className="text-left text-neutral-700 hover:text-black">Home</button>
-            <button className="text-left text-neutral-700 hover:text-black">Trending</button>
-            <button className="text-left text-neutral-700 hover:text-black">Verified</button>
-            <button className="text-left text-neutral-700 hover:text-black">Creator</button>
-            <button className="text-left text-neutral-700 hover:text-black">Settings</button>
-            <button className="text-left text-neutral-700 hover:text-black">{user?.name}</button>
-          </div>
+        <h1 className="text-xl font-bold">Video Flow</h1>
+
+       
+        <div className="hidden md:block">
+          <ul className="flex gap-10">
+            {menuItems.map((item) => (
+              <li key={item} className="cursor-pointer hover:text-blue-500">
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
+      </div>
+
+ 
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
       )}
-    </nav>
+
+ 
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 md:hidden
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="font-bold text-lg">Menu</h2>
+
+          <button className="text-2xl" onClick={() => setIsOpen(false)}>
+            ✕
+          </button>
+        </div>
+
+     
+        <ul className="flex flex-col gap-6 p-4">
+          {menuItems.map((item) => (
+            <li
+              key={item}
+              className="cursor-pointer hover:text-blue-500"
+              onClick={() => setIsOpen(false)}  
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
-
-export default Navbar;

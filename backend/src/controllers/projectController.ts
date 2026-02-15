@@ -6,11 +6,13 @@ import { createProjectSchema, updateProjectSchema } from "../types/project.types
 import Project from "../models/project.js";
 
 export const createProject = async (req: Request, res: Response) => {
+
+
+    console.log(' reached here ;', req.body)
     try {
 
         const createProjectData = createProjectSchema.parse(req.body)
         const { title, description, status } = createProjectData
-
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
