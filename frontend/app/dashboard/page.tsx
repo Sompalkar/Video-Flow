@@ -29,6 +29,7 @@ const DashboardPage = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [title, setTitle] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [sortOrder, setSortOrder] = useState('newest')
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -106,21 +107,41 @@ const DashboardPage = () => {
   }
 
   const filteredProjects = useMemo(() => {
-    return projects.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
-  }, [projects, searchQuery])
+    const filtered = projects.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+
+    return filtered.sort((a, b) => {
+      // MongoDB ObjectIds are timestamp-based, so string comparison works for time sorting
+      if (sortOrder === 'newest') {
+        return b._id.localeCompare(a._id)
+      } else {
+        return a._id.localeCompare(b._id)
+      }
+    })
+  }, [projects, searchQuery, sortOrder])
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4">
       <div className='flex flex-row justify-between items-center w-full gap-4'>
         <div className="flex-1 space-y-4 max-w-2xl">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search projects by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={sortOrder} onValueChange={setSortOrder}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-4">
             {filteredProjects.length === 0 ? (
