@@ -69,3 +69,11 @@ export const getRelativeTime = (date: Date): string => {
     const diffYears = Math.floor(diffMonths / 12);
     return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`;
 };
+
+export const isPastDate = (date: Date): boolean => {
+    return date.getTime() < new Date().getTime();
+};
+
+export const isFutureDate = (date: Date): boolean => {
+    return date.getTime() > new Date().getTime();
+};
